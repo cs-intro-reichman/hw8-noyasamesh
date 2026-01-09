@@ -38,7 +38,7 @@
 
     /** Returns the number of users that this user follows. */
     public int getfCount() {
-        return fCount;
+        return this.fCount;
     }
 
     /** If this user follows the given name, returns true; otherwise returns false. */
@@ -74,27 +74,26 @@
     public boolean removeFollowee(String name) {
         int indexToRemove = -1;
         for(int i=0; i<fCount; i++){
+            if (follows[i] != null && follows[i].equals(name)){
+                indexToRemove = i;
+                break;
+            }
+        }
 
             if (indexToRemove == -1){
-                if(this.follows[i].equals(name)){
-                   indexToRemove = i;
-                }
+                System.out.println(name + " didn't remove");
+                return false;
             }
 
-            if (indexToRemove != -1 && i < fCount - 1) {
-                this.follows[i] = this.follows[i + 1];
-            }
+        for (int j = indexToRemove; j < fCount - 1; j++) {
+            follows[j] = follows[j + 1];
         }
 
-        if (indexToRemove != -1) {
-           fCount--;
-           this.follows[fCount] = null;
-           System.out.println(name + " was succesfuly removed");
-           return true;
-        }
-
-        System.out.println(name + " didn't found");
-        return false;
+        fCount--;
+        this.follows[fCount] = null;
+        System.out.println(name + " was succesfuly removed");
+        return true;
+    
     }
 
     /** Counts the number of users that both this user and the other user follow.
@@ -114,10 +113,12 @@
     /** Checks is this user is a friend of the other user.
      *  (if two users follow each other, they are said to be "friends.") */
     public boolean isFriendOf(User other) {
-        for(int i=0; i<fCount; i++){
-            if (this.follows[i].equals(other.name)){
-                for( int j=0; j<fCount; j++){
-                    if(other.follows[j].equals(this.name)){
+        if (other == null) return false;
+
+        for(int i = 0; i < this.fCount; i++){
+            if (this.follows[i] != null && this.follows[i].equals(other.getName())){
+                for (int j = 0; j<other.getfCount(); j++){
+                    if(other.follows[i] != null && other.follows[j].equals(this.name)){
                         return true;
                     }
                 }
